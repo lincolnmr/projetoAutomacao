@@ -2,14 +2,14 @@ let express = require('express');
 app = express();
 const cors = require('cors');
 const port = 3000;
+five = require("johnny-five");
+board = new five.Board();
+led = null;
+diodo = null;
+thermometer = null;
 
-  /*  five = require("johnny-five"),
-    board = new five.Board(),
-    led = null,
-    diodo = null;
-    */
 
-const {Thermometer } = require("johnny-five");
+
 const { json, urlencoded } = require('body-parser');
 const { response } = require('express');
 
@@ -21,14 +21,14 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'Hello App' });
 });
 
-/*
+
 board.on("ready", function () {
     console.log("Conectado");
     led = new five.Led(11);
     diodo = new five.Led(9);
 
-    
-    const thermometer = new Thermometer({
+    /*
+    thermometer = new five.Thermometer({
         controller: "LM35",
         pin: "A0"
     });
@@ -40,13 +40,12 @@ board.on("ready", function () {
         console.log("  fahrenheit   : ", fahrenheit);
         console.log("  kelvin       : ", kelvin);
         console.log("--------------------------------------");
-    });
+    });*/
 });
-    */
 
 app.post('/led/:mode', function (req, res) {
     console.log(req.params)
-    /*if (led) {
+    if (led) {
         var status = "OK";
         switch (req.params.mode) {
             case "on":
@@ -63,7 +62,7 @@ app.post('/led/:mode', function (req, res) {
         res.send(status);
     } else {
         res.send('Placa não conectada')
-    }*/
+    }
 });
 
 app.get('/diodo/:mode', function (req, res) {

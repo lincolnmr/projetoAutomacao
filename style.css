@@ -42,7 +42,7 @@ p{
     margin-top: 30px;
 }
 
-input{
+.botaoDeslizante{
     position: relative;
     width: 30px;
     height: 15px;
@@ -52,10 +52,9 @@ input{
     border-radius: 20px;
     box-shadow: inset 0 0 5px rgba(85, 85, 85, 0.2);
     transition: .2s;
-    color: black;
 }
 
-input::before{
+.botaoDeslizante::before{
     content: '';
     position: absolute;
     width: 15px;
@@ -69,7 +68,7 @@ input::before{
     transition: .2s;
 }
 
-input:checked::before{
+.botaoDeslizante:checked::before{
     left: 15px;
 }
 
