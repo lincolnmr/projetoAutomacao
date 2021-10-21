@@ -8,34 +8,22 @@
 
 body{
 	font-family: "Nunito", arial, helvetica, sans-serif;
-    font-size: 20px;
+    font-size: 30px;
     background-color: #004C32;
 }
 
-header{
-    background-color: #006341;
-    margin-top: 30px;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-left: 30%;
-    margin-right: 30%;
-    text-align: center;
-    border-radius: 10px;
-}
-
-section{
+#painel{
     background-color: #006341;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: auto;
-    margin-right: auto;
+    text-align: center;
     margin-left: 30%;
     margin-right: 30%;
-    margin-top: 20px;
-    max-height: auto;
+    margin-top: 4%;
     border-radius: 10px;
+    -webkit-box-shadow: -12px 14px 39px 4px #00281B; 
+    box-shadow: -12px 14px 39px 4px #00281B;
 }
 
 p{
@@ -44,37 +32,43 @@ p{
 
 .botaoDeslizante{
     position: relative;
-    width: 30px;
-    height: 15px;
+    width: 50px;
+    height: 25px;
     -webkit-appearance: none;
-    background-color: white;
-    outline: none;
-    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.658);
+    /*outline: none;*/
+    border-radius: 50px;
     box-shadow: inset 0 0 5px rgba(85, 85, 85, 0.2);
-    transition: .2s;
+    transition: .4s;
 }
 
 .botaoDeslizante::before{
     content: '';
     position: absolute;
-    width: 15px;
-    height: 15px;
-    background-color: white;
-    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    background-color: rgb(204, 204, 204);
+    border-radius: 100%;
     top: 0;
     left: 0;
-    transform: scale(1.2);
+    transform: scale(1.3);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: .2s;
 }
 
 .botaoDeslizante:checked::before{
-    left: 15px;
+    left: 25px;
 }
 
 input:checked{
     background-color: black;
 }
-.titulo {
-    border: 1px solid black;
+
+.textoTemperatura{
+    color: white;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 30px;
+    background-color: #006341;
+    font-size: 1cm;
 }
