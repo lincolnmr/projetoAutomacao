@@ -49,8 +49,7 @@ board.on("ready", function () {
 
     thermometer = new five.Thermometer({
         controller: "LM35",
-        pin: "A1",
-        freq: 3000
+        pin: "A1"
     });
 
     thermometer.on("data", () => { 
@@ -75,7 +74,6 @@ board.on("ready", function () {
 
 
 const ligarLuz = (param) => {
-    console.log(param);
     if (param){
         var status = "Sala OK";
         switch (param) {
@@ -97,10 +95,7 @@ const ligarLuz = (param) => {
 };
 
 const ligarAlarme = (param) => {
-    
-    console.log(param)
     if (diodo) {
-        var status = "OK";
         switch (param) {
             case "on":
                 diodo.on();
@@ -109,21 +104,14 @@ const ligarAlarme = (param) => {
                 diodo.off();
                 break;
             default:
-                status = "Comando não encontrado: " + param;
+                let status = "Comando não encontrado: " + param;
+                console.log(status);
                 break;
         }
-        console.log(status);
     } else {
         console.log('Placa não conectada')
     }
 };
-
-app.get('/temperatura', (req, res) => {
-
-    res.status(200).json({
-        temperatura: Math.random()
-    });
-});
 
 server.listen(port, function () {
     console.log('Conectado na porta ' + port);

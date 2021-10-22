@@ -78,10 +78,13 @@ const ligarAlarme = () => {
 }
 
 const desligarAlarme = () => {
-    console.log('DISPAROU');
     socket.emit('ligarAlarme', {
         alarme: 'off'
     });
+}
+
+const desligarAlarmeCheckBox = () => {
+    document.querySelector('#botaoAlarme').checked = false;
 }
 
 // ADICIONAR EVENTOS
@@ -92,7 +95,6 @@ const iniciarAplicacao = () => {
 
 const iniciarSocket = () => {
     socket.on('temperaturaAtual', (temperatura) => {
-        console.log('tempppp');
         document.querySelector('#botaoTemperatura').value = temperatura;
     })
 
@@ -100,6 +102,7 @@ const iniciarSocket = () => {
         const limiteMinLuz = 900;
         if(disparou > limiteMinLuz){
             desligarAlarme();
+            desligarAlarmeCheckBox();
         }
     })
 }
