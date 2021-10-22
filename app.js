@@ -1,10 +1,36 @@
 let express = require('express');
-const { response } = require('express');
 const cors = require('cors');
 const { json, urlencoded } = require('body-parser');
+const path = require('path');
 five = require("johnny-five");
-
 const port = 3000;
+
+const app = express();
+app.use(cors())
+app.use(json());
+app.use(urlencoded({ extended: true }));
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'public'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
+app.use('/', (req, res) => {
+    res.render('index.html');
+})
+
+io.on('connection', socket => {
+    console.log(`socket conectado: ${socket.id}`);
+    socket.on('ligarLuz', ({luz}) => {
+       ligarLuz(luz);
+    })
+    socket.on('ligarAlarme', ({alarme}) => {
+        ligarAlarme(alarme);
+     })
+})
+
 board = new five.Board();
 
 let ledSala = null,
@@ -12,15 +38,6 @@ let ledSala = null,
     ledCozinha = null,
     diodo = null,
     thermometer = null;
-
-app = express();
-app.use(cors())
-app.use(json());
-app.use(urlencoded({ extended: true }));
-
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Hello App' });
-});
 
 board.on("ready", function () {
     console.log("Conexão com a placa concluída");
@@ -32,17 +49,15 @@ board.on("ready", function () {
 
     thermometer = new five.Thermometer({
         controller: "LM35",
-        pin: "A1"
+        pin: "A1",
+        freq: 3000
     });
 
-    /*
-    thermometer.on("change", () => {
-        const {celsius} = thermometer;
-        console.log("Thermometer");
-        console.log("  celsius      : ", celsius);
-      });
+    thermometer.on("data", () => { 
+        const { celsius } = thermometer;
+        io.sockets.emit('temperaturaAtual', celsius);
+    });
 
-     
     photoresistor = new five.Sensor({
         pin: "A2",
         freq: 250
@@ -53,19 +68,17 @@ board.on("ready", function () {
         pot: photoresistor
     });
 
-    
     photoresistor.on("data", function() {
-        console.log(this.value);
+        io.sockets.emit('alarme', this.value);
     });
-    */
 });
 
-app.post('/led/:mode', function (req, res) {
-    console.log(req.params);
-    
-    if (ledSala){
+
+const ligarLuz = (param) => {
+    console.log(param);
+    if (param){
         var status = "Sala OK";
-        switch (req.params.mode) {
+        switch (param) {
             case "on":
                 ledSala.on();
                 break;
@@ -73,13 +86,51 @@ app.post('/led/:mode', function (req, res) {
                 ledSala.off();
                 break;
             default:
-                status = "Comando não encontrado: " + req.params.mode;
+                status = "Comando não encontrado: " + param;
                 break;
         }
         console.log(status);
-        res.send(status);
     }
+    else {
+        console.log('Placa não conectada')
+    }
+};
 
+const ligarAlarme = (param) => {
+    
+    console.log(param)
+    if (diodo) {
+        var status = "OK";
+        switch (param) {
+            case "on":
+                diodo.on();
+                break;
+            case "off":
+                diodo.off();
+                break;
+            default:
+                status = "Comando não encontrado: " + param;
+                break;
+        }
+        console.log(status);
+    } else {
+        console.log('Placa não conectada')
+    }
+};
+
+app.get('/temperatura', (req, res) => {
+
+    res.status(200).json({
+        temperatura: Math.random()
+    });
+});
+
+server.listen(port, function () {
+    console.log('Conectado na porta ' + port);
+});
+
+
+/*
     else if (ledQuarto) {
         var status = "Quarto OK";
         switch (req.params.mode) {
@@ -113,41 +164,4 @@ app.post('/led/:mode', function (req, res) {
         console.log(status);
         res.send(status);
     }
-    
-    else {
-        res.send('Placa não conectada')
-    }
-});
-
-app.post('/diodo/:mode', function (req, res) {
-    console.log(req.params)
-    if (diodo) {
-        var status = "OK";
-        switch (req.params.mode) {
-            case "on":
-                diodo.on();
-                break;
-            case "off":
-                diodo.off();
-                break;
-            default:
-                status = "Comando não encontrado: " + req.params.mode;
-                break;
-        }
-        console.log(status);
-        res.send(status);
-    } else {
-        res.send('Placa não conectada')
-    }
-});
-
-app.get('/temperatura', (req, res) => {
-
-    res.status(200).json({
-        temperatura: Math.random()
-    });
-});
-
-app.listen(port, function () {
-    console.log('Conectado na porta ' + port);
-});
+*/

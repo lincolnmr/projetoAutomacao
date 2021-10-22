@@ -15,7 +15,10 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "johnny-five": "^2.1.0",
-    "keypress": "^0.2.1"
+    "keypress": "^0.2.1",
+    "socket.io": "^4.3.1",
+    "socket.io-client": "^4.3.2",
+    "ejs": "^1.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"

@@ -1,4 +1,5 @@
 const baseUrl = 'http://localhost:3000';
+let socket = io('http://localhost:3000');
 
 const eventoCheckbox = () => {
 
@@ -39,11 +40,6 @@ const eventoCheckbox = () => {
     });
 }
 
-const adicionarEventoTemperatura = () => {
-       setInterval(async () => {
-        document.querySelector('#botaoTemperatura').value = await obterTemperatura();
-        }, 1000);
-}
 
 // LUZ
 const checarLuzSala = () => {
@@ -59,11 +55,15 @@ const checarLuzCozinha = () => {
 }
 
 const ligarLuz = () => {
-    axios.post(`${baseUrl}/led/on`);
+    socket.emit('ligarLuz', {
+        luz: 'on'
+    });
 }
 
 const desligarLuz = () => {
-    axios.post(`${baseUrl}/led/off`);
+    socket.emit('ligarLuz', {
+        luz: 'off'
+    });
 }
 
 //ALARME
@@ -72,22 +72,36 @@ const isCheckedAlarm = () => {
 }
 
 const ligarAlarme = () => {
-    axios.post(`${baseUrl}/diodo/on`);
+    socket.emit('ligarAlarme', {
+        alarme: 'on'
+    });
 }
 
 const desligarAlarme = () => {
-    axios.post(`${baseUrl}/diodo/off`);
-}
-
-// TEMPERATURA
-const obterTemperatura = async () => {
-    return (await axios.get(`${baseUrl}/temperatura`)).data.temperatura
+    console.log('DISPAROU');
+    socket.emit('ligarAlarme', {
+        alarme: 'off'
+    });
 }
 
 // ADICIONAR EVENTOS
-const addEvents = () => {
+const iniciarAplicacao = () => {
     eventoCheckbox();
-    adicionarEventoTemperatura();
+    iniciarSocket();
 }
 
-addEvents();
+const iniciarSocket = () => {
+    socket.on('temperaturaAtual', (temperatura) => {
+        console.log('tempppp');
+        document.querySelector('#botaoTemperatura').value = temperatura;
+    })
+
+    socket.on('alarme', (disparou) => {
+        const limiteMinLuz = 900;
+        if(disparou > limiteMinLuz){
+            desligarAlarme();
+        }
+    })
+}
+
+iniciarAplicacao();
