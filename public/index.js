@@ -1,6 +1,7 @@
 const baseUrl = 'http://localhost:3000';
 let socket = io('http://localhost:3000');
 
+// EVENTOS CHECKBOX
 const eventoCheckbox = () => {
     document.querySelector("#luzSala").addEventListener('click', () => {
         if (checarLuzSala()) {
@@ -39,7 +40,7 @@ const eventoCheckbox = () => {
     });
 }
 
-// LUZ
+// FUNÇÕES LUZ
 const checarLuzSala = () => {
     return document.querySelector('#luzSala').checked;
 }
@@ -54,33 +55,32 @@ const checarLuzCozinha = () => {
 }
 
 const ligarLuz = (comodo) => {
-    console.log('console log ligarluz: ', comodo)
-    socket.emit('ligarLuz', {
+    socket.emit('comandoLuz', {
         luz: 'on',
         lugar: comodo
     });
 }
 
 const desligarLuz = (comodo) => {
-    socket.emit('ligarLuz', {
+    socket.emit('comandoLuz', {
         luz: 'off',
         lugar: comodo
     });
 }
 
-//ALARME
+//FUNÇÃO ALARME
 const isCheckedAlarm = () => {
     return document.querySelector('#botaoAlarme').checked;
 }
 
 const ligarAlarme = () => {
-    socket.emit('ligarAlarme', {
+    socket.emit('comandoAlarme', {
         alarme: 'on'
     });
 }
 
 const desligarAlarme = () => {
-    socket.emit('ligarAlarme', {
+    socket.emit('comandoAlarme', {
         alarme: 'off'
     });
 }
@@ -89,7 +89,13 @@ const desligarAlarmeCheckBox = () => {
     document.querySelector('#botaoAlarme').checked = false;
 }
 
-// ADICIONAR EVENTOS
+const ligarluzes = () => {
+    document.querySelector('#luzSala').checked = true;
+    document.querySelector('#luzQuarto').checked = true;
+    document.querySelector('#luzCozinha').checked = true;
+}
+
+// EVENTOS APLICAÇÃO
 const iniciarAplicacao = () => {
     eventoCheckbox();
     iniciarSocket();
@@ -97,17 +103,18 @@ const iniciarAplicacao = () => {
 
 const iniciarSocket = () => {
     socket.on('temperaturaAtual', (temperatura) => {
-        document.querySelector('#botaoTemperatura').value = (temperatura / 20);
+        document.querySelector('#projetaTemperatura').value = (temperatura / 20);
     })
 
     socket.on('alarme', (disparou) => {
-        const limiteMinLuz = 900;
-        if(disparou > limiteMinLuz){
+        const limiteMaxLuz = 900; // Se o valor da leitura for maior que 900 o sensor não está recebendo luz, 
+                                  // o alarme vai ser disparado
+        if(disparou > limiteMaxLuz){
             desligarAlarme();
             desligarAlarmeCheckBox();
+            ligarluzes();
         }
     })
 }
-
 
 iniciarAplicacao();

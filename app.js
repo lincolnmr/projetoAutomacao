@@ -24,12 +24,13 @@ app.use('/', (req, res) => {
 io.on('connection', socket => {
     console.log(`socket conectado: ${socket.id}`);
 
-    socket.on('ligarLuz', ({ luz, lugar }) => {
-        ligarLuz(luz, lugar);
+    socket.on('comandoLuz', ({ luz, lugar }) => {
+        console.log('TESTE: ', luz, lugar)
+        interruptorLuz(luz, lugar);
     })
 
-    socket.on('ligarAlarme', ({ alarme }) => {
-        ligarAlarme(alarme);
+    socket.on('comandoAlarme', ({ alarme }) => {
+        interruptorAlarme(alarme);
     })
 })
 
@@ -76,7 +77,7 @@ board.on("ready", function () {
 });
 */
 
-const ligarLuz = (luz, lugar) => {
+const interruptorLuz = (luz, lugar) => {
     try {
         var status = 'ok';
         switch (luz) {
@@ -114,12 +115,12 @@ const ligarLuz = (luz, lugar) => {
         }
         console.log(status);
     } catch (error) {
-        console.log('Placa não conectada' + error);
+        console.log('Placa não conectada. Erro: ' + error);
     }
 };
 
-const ligarAlarme = (param) => {
-    if (diodo) {
+const interruptorAlarme = (param) => {
+    try {
         switch (param) {
             case "on":
                 diodo.on();
@@ -131,9 +132,9 @@ const ligarAlarme = (param) => {
                 let status = "Comando não encontrado: " + param;
                 console.log(status);
                 break;
-        }
-    } else {
-        console.log('Placa não conectada')
+        }  
+    } catch (error){
+        console.log('Placa não conectada. Erro: ' + error);   
     }
 };
 
