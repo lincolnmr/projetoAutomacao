@@ -2,31 +2,30 @@ const baseUrl = 'http://localhost:3000';
 let socket = io('http://localhost:3000');
 
 const eventoCheckbox = () => {
-
     document.querySelector("#luzSala").addEventListener('click', () => {
         if (checarLuzSala()) {
-            ligarLuz();
+            ligarLuz('sala');
         }
         else {
-            desligarLuz();
+            desligarLuz('sala');
         }
     });
 
     document.querySelector("#luzQuarto").addEventListener('click', () => {
         if (checarLuzQuarto()) {
-            ligarLuz();
+            ligarLuz('quarto');
         }
         else {
-            desligarLuz();
+            desligarLuz('quarto');
         }
     });
 
     document.querySelector("#luzCozinha").addEventListener('click', () => {
         if (checarLuzCozinha()) {
-            ligarLuz();
+            ligarLuz('cozinha');
         }
         else {
-            desligarLuz();
+            desligarLuz('cozinha');
         }
     });
 
@@ -40,13 +39,13 @@ const eventoCheckbox = () => {
     });
 }
 
-
 // LUZ
 const checarLuzSala = () => {
     return document.querySelector('#luzSala').checked;
 }
 
 const checarLuzQuarto = () => {
+    console.log('quarto');
     return document.querySelector('#luzQuarto').checked;
 }
 
@@ -54,15 +53,18 @@ const checarLuzCozinha = () => {
     return document.querySelector('#luzCozinha').checked;
 }
 
-const ligarLuz = () => {
+const ligarLuz = (comodo) => {
+    console.log('console log ligarluz: ', comodo)
     socket.emit('ligarLuz', {
-        luz: 'on'
+        luz: 'on',
+        lugar: comodo
     });
 }
 
-const desligarLuz = () => {
+const desligarLuz = (comodo) => {
     socket.emit('ligarLuz', {
-        luz: 'off'
+        luz: 'off',
+        lugar: comodo
     });
 }
 
@@ -95,7 +97,7 @@ const iniciarAplicacao = () => {
 
 const iniciarSocket = () => {
     socket.on('temperaturaAtual', (temperatura) => {
-        document.querySelector('#botaoTemperatura').value = temperatura;
+        document.querySelector('#botaoTemperatura').value = (temperatura / 20);
     })
 
     socket.on('alarme', (disparou) => {
@@ -106,5 +108,6 @@ const iniciarSocket = () => {
         }
     })
 }
+
 
 iniciarAplicacao();
