@@ -25,7 +25,6 @@ io.on('connection', socket => {
     console.log(`socket conectado: ${socket.id}`);
 
     socket.on('comandoLuz', ({ luz, lugar }) => {
-        console.log('TESTE: ', luz, lugar)
         interruptorLuz(luz, lugar);
     })
 
@@ -41,7 +40,6 @@ let ledSala = null,
     ledCozinha = null,
     diodo = null;
 
-/*
 board.on("ready", function () {
     console.log("Conexão com a placa concluída");
 
@@ -52,11 +50,11 @@ board.on("ready", function () {
 
     thermometer = new five.Thermometer({
         controller: "LM35",
-        pin: "A1",
-        freq: 2000
+        pin: "A0",
+        freq: 1000
     });
 
-    thermometer.on("data", () => { 
+    thermometer.on("change", () => { 
         const { celsius } = thermometer;
         io.sockets.emit('temperaturaAtual', celsius);
     });
@@ -66,7 +64,6 @@ board.on("ready", function () {
         freq: 250
     });
 
-    //repl permite acesso direto ao sensor
     board.repl.inject({
         pot: photoresistor
     });
@@ -75,11 +72,10 @@ board.on("ready", function () {
         io.sockets.emit('alarme', this.value);
     });
 });
-*/
+
 
 const interruptorLuz = (luz, lugar) => {
     try {
-        var status = 'ok';
         switch (luz) {
             case "on":
                 if (lugar == 'sala') {
@@ -110,10 +106,9 @@ const interruptorLuz = (luz, lugar) => {
                 }
                 break;
             default:
-                status = "Comando não encontrado: " + luz + lugar;
+                let status = "Comando não encontrado: " + luz + lugar;
                 break;
         }
-        console.log(status);
     } catch (error) {
         console.log('Placa não conectada. Erro: ' + error);
     }

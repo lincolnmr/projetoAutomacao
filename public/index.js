@@ -31,7 +31,7 @@ const eventoCheckbox = () => {
     });
 
     document.querySelector("#botaoAlarme").addEventListener('click', () => {
-        if (isCheckedAlarm()) {
+        if (checarAlarme()) {
             ligarAlarme();
         }
         else {
@@ -46,7 +46,6 @@ const checarLuzSala = () => {
 }
 
 const checarLuzQuarto = () => {
-    console.log('quarto');
     return document.querySelector('#luzQuarto').checked;
 }
 
@@ -69,7 +68,7 @@ const desligarLuz = (comodo) => {
 }
 
 //FUNÇÃO ALARME
-const isCheckedAlarm = () => {
+const checarAlarme = () => {
     return document.querySelector('#botaoAlarme').checked;
 }
 
@@ -91,8 +90,11 @@ const desligarAlarmeCheckBox = () => {
 
 const ligarluzes = () => {
     document.querySelector('#luzSala').checked = true;
+    ligarLuz('sala');
     document.querySelector('#luzQuarto').checked = true;
+    ligarLuz('quarto');
     document.querySelector('#luzCozinha').checked = true;
+    ligarLuz('cozinha');
 }
 
 // EVENTOS APLICAÇÃO
@@ -103,16 +105,18 @@ const iniciarAplicacao = () => {
 
 const iniciarSocket = () => {
     socket.on('temperaturaAtual', (temperatura) => {
-        document.querySelector('#projetaTemperatura').value = (temperatura / 20);
+        document.querySelector('#projetaTemperatura').value = temperatura;
     })
 
     socket.on('alarme', (disparou) => {
         const limiteMaxLuz = 900; // Se o valor da leitura for maior que 900 o sensor não está recebendo luz, 
-                                  // o alarme vai ser disparado
-        if(disparou > limiteMaxLuz){
-            desligarAlarme();
-            desligarAlarmeCheckBox();
-            ligarluzes();
+        // o alarme vai ser disparado
+        if (checarAlarme()) {
+            if (disparou > limiteMaxLuz) {
+                desligarAlarme();
+                desligarAlarmeCheckBox();
+                ligarluzes();
+            }
         }
     })
 }
