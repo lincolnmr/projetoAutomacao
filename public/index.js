@@ -33,6 +33,16 @@ const eventoCheckbox = () => {
     document.querySelector("#botaoAlarme").addEventListener('click', () => {
         if (checarAlarme()) {
             ligarAlarme();
+            
+            socket.on('alarme', (luzAlarme) => {
+                const limiteMaxLuz = 900; // Se o valor da leitura for maior que 900 o sensor não está recebendo luz, 
+                // o alarme vai ser disparado
+                if (checarAlarme()) {
+                    if (luzAlarme > limiteMaxLuz) {
+                        dispararAlarme();
+                    }
+                }
+            })
         }
         else {
             desligarAlarme();
@@ -84,17 +94,17 @@ const desligarAlarme = () => {
     });
 }
 
-const desligarAlarmeCheckBox = () => {
+const dispararAlarme = () => {
     document.querySelector('#botaoAlarme').checked = false;
-}
-
-const ligarluzes = () => {
+    desligarAlarme();
     document.querySelector('#luzSala').checked = true;
     ligarLuz('sala');
     document.querySelector('#luzQuarto').checked = true;
     ligarLuz('quarto');
     document.querySelector('#luzCozinha').checked = true;
     ligarLuz('cozinha');
+
+    socket.emit('sirene');
 }
 
 // EVENTOS APLICAÇÃO
@@ -106,18 +116,6 @@ const iniciarAplicacao = () => {
 const iniciarSocket = () => {
     socket.on('temperaturaAtual', (temperatura) => {
         document.querySelector('#projetaTemperatura').value = temperatura;
-    })
-
-    socket.on('alarme', (disparou) => {
-        const limiteMaxLuz = 900; // Se o valor da leitura for maior que 900 o sensor não está recebendo luz, 
-        // o alarme vai ser disparado
-        if (checarAlarme()) {
-            if (disparou > limiteMaxLuz) {
-                desligarAlarme();
-                desligarAlarmeCheckBox();
-                ligarluzes();
-            }
-        }
     })
 }
 

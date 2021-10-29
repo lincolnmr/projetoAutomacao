@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"
         integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
         crossorigin="anonymous"></script>
@@ -13,21 +13,17 @@
 </head>
 
 <body>
-    <div id="painel">
         <div id="titulo">
-            <h1>Painel</h1>
+            <h2>Casa Inteligente</h2>
         </div>
-        <section>
-            <p>Luz sala: <input class="botaoDeslizante" id="luzSala" type="checkbox" name="luz" value="" /></p>
-            <p>Luz quarto: <input class="botaoDeslizante" id="luzQuarto" type="checkbox" name="luz" value="" /></p>
-            <p>Luz cozinha: <input class="botaoDeslizante" id="luzCozinha" type="checkbox" name="luz" value="" /></p>
-            <p>Alarme: <input class="botaoDeslizante" id="botaoAlarme" type="checkbox" name="alarme" value=""></p>
-            <p>Ventilador: <input class="botaoDeslizante" id="botaoVentilador" type="checkbox" name="ventilador"
-                    value=""></p>
-            <p>Temperatura: <input class="textoTemperatura" id="projetaTemperatura" type="text"
-                    value=""> </p>
-        </section>
-    </div>
+        <div id="componentes">
+            <div class="tag"> <p>Luz sala:</p> <input class="botaoDeslizante" id="luzSala" type="checkbox" name="luz" value="" /></div>
+            <div class="tag"> <p>Luz quarto:</p> <input class="botaoDeslizante" id="luzQuarto" type="checkbox" name="luz" value="" /></div>
+            <div class="tag"> <p>Luz cozinha:</p> <input class="botaoDeslizante" id="luzCozinha" type="checkbox" name="luz" value="" /></div>
+            <div class="tag"> <p>Alarme:</p> <input class="botaoDeslizante" id="botaoAlarme" type="checkbox" name="alarme" value=""></div>
+            <div class="tag"> <p>Ventilador:</p> <input class="botaoDeslizante" id="botaoVentilador" type="checkbox" name="ventilador" value=""></div>
+            <div class="tag"> <p>Temp Cº:</p> <input class="textoTemperatura" id="projetaTemperatura" type="text" value=""></div>
+        </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="index.js"></script>
 </body>

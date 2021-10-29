@@ -1,8 +1,9 @@
 let express = require('express');
+five = require("johnny-five");
 const cors = require('cors');
 const { json, urlencoded } = require('body-parser');
 const path = require('path');
-five = require("johnny-five");
+
 const port = 3000;
 
 const app = express();
@@ -17,28 +18,35 @@ app.set('views', path.join(__dirname, 'public'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
+board = new five.Board();
+
 app.use('/', (req, res) => {
     res.render('index.html');
-})
+});
 
 io.on('connection', socket => {
     console.log(`socket conectado: ${socket.id}`);
 
     socket.on('comandoLuz', ({ luz, lugar }) => {
         interruptorLuz(luz, lugar);
-    })
+    });
 
     socket.on('comandoAlarme', ({ alarme }) => {
         interruptorAlarme(alarme);
-    })
-})
+    });
 
-board = new five.Board();
+    socket.on('sirene', () => {
+        buzzerAlarme();
+    });
+});
 
 let ledSala = null,
     ledQuarto = null,
     ledCozinha = null,
-    diodo = null;
+    laserAlarme = null,
+    buzzer = null,
+    thermometer = null,
+    photoresistor = null;
 
 board.on("ready", function () {
     console.log("Conexão com a placa concluída");
@@ -46,19 +54,26 @@ board.on("ready", function () {
     ledSala = new five.Led(13);
     ledQuarto = new five.Led(12);
     ledCozinha = new five.Led(11);
-    diodo = new five.Led(10);
+    laserAlarme = new five.Led(10);
 
+    sensorTemperatura();
+    sensorAlarme();
+});
+
+const sensorTemperatura = () => {
     thermometer = new five.Thermometer({
         controller: "LM35",
         pin: "A0",
-        freq: 1000
+        freq: 2000
     });
 
-    thermometer.on("change", () => { 
+    thermometer.on("data", () => {
         const { celsius } = thermometer;
-        io.sockets.emit('temperaturaAtual', celsius);
+        io.sockets.emit('temperaturaAtual', celsius / 2);
     });
+};
 
+const sensorAlarme = () => {
     photoresistor = new five.Sensor({
         pin: "A2",
         freq: 250
@@ -68,11 +83,25 @@ board.on("ready", function () {
         pot: photoresistor
     });
 
-    photoresistor.on("data", function() {
+    photoresistor.on("data", function () {
         io.sockets.emit('alarme', this.value);
+        console.log(this.value);
     });
-});
+};
 
+const buzzerAlarme = () => {
+    buzzer = new five.Piezo(3);
+
+    board.repl.inject({
+        buzzer: buzzer
+    });
+
+    buzzer.play({
+        song: [
+            [1500, 5]
+        ]
+    });
+};
 
 const interruptorLuz = (luz, lugar) => {
     try {
@@ -80,6 +109,7 @@ const interruptorLuz = (luz, lugar) => {
             case "on":
                 if (lugar == 'sala') {
                     ledSala.on();
+                    //console.log(ledSala.value);
                 }
                 else if (lugar == 'quarto') {
                     ledQuarto.on();
@@ -118,18 +148,18 @@ const interruptorAlarme = (param) => {
     try {
         switch (param) {
             case "on":
-                diodo.on();
+                laserAlarme.on();
                 break;
             case "off":
-                diodo.off();
+                laserAlarme.off();
                 break;
             default:
                 let status = "Comando não encontrado: " + param;
                 console.log(status);
                 break;
-        }  
-    } catch (error){
-        console.log('Placa não conectada. Erro: ' + error);   
+        }
+    } catch (error) {
+        console.log('Placa não conectada. Erro: ' + error);
     }
 };
 
