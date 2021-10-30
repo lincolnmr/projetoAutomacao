@@ -67,9 +67,9 @@ const sensorTemperatura = () => {
         freq: 2000
     });
 
-    thermometer.on("data", () => {
+    thermometer.on("change", () => {
         const { celsius } = thermometer;
-        io.sockets.emit('temperaturaAtual', celsius / 2);
+        io.sockets.emit('temperaturaAtual', celsius);
     });
 };
 

@@ -13,17 +13,30 @@
 </head>
 
 <body>
-        <div id="titulo">
-            <h2>Casa Inteligente</h2>
+    <div id="titulo">
+        <h2>Casa Inteligente</h2>
+    </div>
+    <div class="temp">
+        <p>Temp Cº:</p> <input id="projetaTemperatura" type="text" value="">
+    </div>
+    <div id="componentes">
+        <div class="tag">
+            <p>Luz sala:</p> <input class="botaoDeslizante" id="luzSala" type="checkbox" name="luz" value="" />
         </div>
-        <div id="componentes">
-            <div class="tag"> <p>Luz sala:</p> <input class="botaoDeslizante" id="luzSala" type="checkbox" name="luz" value="" /></div>
-            <div class="tag"> <p>Luz quarto:</p> <input class="botaoDeslizante" id="luzQuarto" type="checkbox" name="luz" value="" /></div>
-            <div class="tag"> <p>Luz cozinha:</p> <input class="botaoDeslizante" id="luzCozinha" type="checkbox" name="luz" value="" /></div>
-            <div class="tag"> <p>Alarme:</p> <input class="botaoDeslizante" id="botaoAlarme" type="checkbox" name="alarme" value=""></div>
-            <div class="tag"> <p>Ventilador:</p> <input class="botaoDeslizante" id="botaoVentilador" type="checkbox" name="ventilador" value=""></div>
-            <div class="tag"> <p>Temp Cº:</p> <input class="textoTemperatura" id="projetaTemperatura" type="text" value=""></div>
+        <div class="tag">
+            <p>Luz quarto:</p> <input class="botaoDeslizante" id="luzQuarto" type="checkbox" name="luz" value="" />
         </div>
+        <div class="tag">
+            <p>Luz cozinha:</p> <input class="botaoDeslizante" id="luzCozinha" type="checkbox" name="luz" value="" />
+        </div>
+        <div class="tag">
+            <p>Alarme:</p> <input class="botaoDeslizante" id="botaoAlarme" type="checkbox" name="alarme" value="">
+        </div>
+        <div class="tag">
+            <p>Ventilador:</p> <input class="botaoDeslizante" id="botaoVentilador" type="checkbox" name="ventilador"
+                value="">
+        </div>
+    </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="index.js"></script>
 </body>

@@ -21,7 +21,21 @@ body{
     color: rgb(212, 212, 212);
     display: flex;
     flex-direction: column;
-    margin: 1cm;
+}
+
+.temp{
+    display: flex;
+    justify-content: flex-end;
+    font-size:3vw;
+    color: rgb(212, 212, 212);
+    margin-top: 20px;
+}
+
+#projetaTemperatura{
+    background-color: #202124;
+    color: rgb(212, 212, 212);
+    font-size:3vw;
+    width: 45px;
 }
 
 .tag{
@@ -32,13 +46,13 @@ body{
     border-radius: 30px;
 }
 
-p{
+.tag p{
     margin-left: 1cm;
     margin-top: 1cm;
     margin-bottom: 1cm;
 }
 
-input{
+.tag input{
     margin-right: 1cm;
     margin-top: 1cm;
     margin-bottom: 1cm;
@@ -74,13 +88,4 @@ input{
 
 input:checked{
     background-color: rgba(0, 189, 41, 0.637);
-}
-
-.textoTemperatura{
-    background-color: #292a2d;
-    width: 90px;
-    height: 50px;
-    margin-bottom: 30px;
-    font-size: 1cm;
-    color: rgb(212, 212, 212);
 }

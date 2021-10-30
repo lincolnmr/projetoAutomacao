@@ -1,5 +1,5 @@
-const baseUrl = 'http://localhost:3000';
-let socket = io('http://localhost:3000');
+const baseUrl = 'http://192.168.1.108:3000';
+let socket = io('http://192.168.1.108:3000');
 
 // EVENTOS CHECKBOX
 const eventoCheckbox = () => {
