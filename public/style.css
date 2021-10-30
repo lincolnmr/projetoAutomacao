@@ -47,15 +47,11 @@ body{
 }
 
 .tag p{
-    margin-left: 1cm;
-    margin-top: 1cm;
-    margin-bottom: 1cm;
+    margin: 1cm;
 }
 
 .tag input{
-    margin-right: 1cm;
-    margin-top: 1cm;
-    margin-bottom: 1cm;
+    margin: 1cm;
 }
 
 .botaoDeslizante{
