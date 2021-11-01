@@ -3,10 +3,10 @@ five = require("johnny-five");
 const cors = require('cors');
 const { json, urlencoded } = require('body-parser');
 const path = require('path');
-
+const board = new five.Board();
 const port = 3000;
-
 const app = express();
+
 app.use(cors())
 app.use(json());
 app.use(urlencoded({ extended: true }));
@@ -17,8 +17,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'public'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
-
-board = new five.Board();
 
 app.use('/', (req, res) => {
     res.render('index.html');
@@ -48,7 +46,7 @@ let ledSala = null,
     thermometer = null,
     photoresistor = null;
 
-board.on("ready", function () {
+board.on("ready", () => {
     console.log("Conexão com a placa concluída");
 
     ledSala = new five.Led(13);
@@ -64,18 +62,18 @@ const sensorTemperatura = () => {
     thermometer = new five.Thermometer({
         controller: "LM35",
         pin: "A0",
-        freq: 2000
+        freq: 1000
     });
 
-    thermometer.on("change", () => {
+    thermometer.on("data", () => {
         const { celsius } = thermometer;
-        io.sockets.emit('temperaturaAtual', celsius);
+        io.sockets.emit('temperaturaAtual', celsius - 21);
     });
 };
 
 const sensorAlarme = () => {
     photoresistor = new five.Sensor({
-        pin: "A2",
+        pin: "A5",
         freq: 250
     });
 
@@ -85,7 +83,6 @@ const sensorAlarme = () => {
 
     photoresistor.on("data", function () {
         io.sockets.emit('alarme', this.value);
-        console.log(this.value);
     });
 };
 

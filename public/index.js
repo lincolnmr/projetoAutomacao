@@ -1,5 +1,5 @@
-const baseUrl = 'http://192.168.1.108:3000';
-let socket = io('http://192.168.1.108:3000');
+const baseUrl = 'http://192.168.2.133:3000';
+let socket = io('http://192.168.2.133:3000');
 
 // EVENTOS CHECKBOX
 const eventoCheckbox = () => {
@@ -115,7 +115,8 @@ const iniciarAplicacao = () => {
 
 const iniciarSocket = () => {
     socket.on('temperaturaAtual', (temperatura) => {
-        document.querySelector('#projetaTemperatura').value = temperatura;
+        const temp = temperatura;
+        document.querySelector('#projetaTemperatura').value = temp;
     })
 }
 
