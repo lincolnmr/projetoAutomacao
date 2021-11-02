@@ -21,19 +21,19 @@ const eventoCheckbox = () => {
         }
     });
 
-    document.querySelector("#luzCozinha").addEventListener('click', () => {
-        if (checarLuzCozinha()) {
-            ligarLuz('cozinha');
+    document.querySelector("#luzExterna").addEventListener('click', () => {
+        if (checarLuzExterna()) {
+            ligarLuz('externa');
         }
         else {
-            desligarLuz('cozinha');
+            desligarLuz('externa');
         }
     });
 
     document.querySelector("#botaoAlarme").addEventListener('click', () => {
         if (checarAlarme()) {
             ligarAlarme();
-            
+
             socket.on('alarme', (luzAlarme) => {
                 const limiteMaxLuz = 900; // Se o valor da leitura for maior que 900 o sensor não está recebendo luz, 
                 // o alarme vai ser disparado
@@ -59,8 +59,8 @@ const checarLuzQuarto = () => {
     return document.querySelector('#luzQuarto').checked;
 }
 
-const checarLuzCozinha = () => {
-    return document.querySelector('#luzCozinha').checked;
+const checarLuzExterna = () => {
+    return document.querySelector('#luzExterna').checked;
 }
 
 const ligarLuz = (comodo) => {
@@ -101,8 +101,8 @@ const dispararAlarme = () => {
     ligarLuz('sala');
     document.querySelector('#luzQuarto').checked = true;
     ligarLuz('quarto');
-    document.querySelector('#luzCozinha').checked = true;
-    ligarLuz('cozinha');
+    document.querySelector('#luzExterna').checked = true;
+    ligarLuz('externa');
 
     socket.emit('sirene');
 }
@@ -117,6 +117,14 @@ const iniciarSocket = () => {
     socket.on('temperaturaAtual', (temperatura) => {
         const temp = temperatura;
         document.querySelector('#projetaTemperatura').value = temp;
+    })
+
+    socket.on('luminosidade', (luzExterna) => {
+        const limiteMaxLuz = 1000; // Se o valor da leitura for maior que 1000 a luz externa vai acender
+        if (luzExterna > limiteMaxLuz) {
+            ligarLuz('externa');
+            document.querySelector('#luzExterna').checked = true;
+        }
     })
 }
 

@@ -40,7 +40,7 @@ io.on('connection', socket => {
 
 let ledSala = null,
     ledQuarto = null,
-    ledCozinha = null,
+    ledExterno = null,
     laserAlarme = null,
     buzzer = null,
     thermometer = null,
@@ -51,12 +51,28 @@ board.on("ready", () => {
 
     ledSala = new five.Led(13);
     ledQuarto = new five.Led(12);
-    ledCozinha = new five.Led(11);
+    ledExterno = new five.Led(11);
     laserAlarme = new five.Led(10);
 
     sensorTemperatura();
     sensorAlarme();
+    sensorLuminosidade();
 });
+
+const sensorLuminosidade = () => {
+    photoresistor = new five.Sensor({
+        pin: "A3",
+        freq: 250
+    });
+
+    board.repl.inject({
+        pot: photoresistor
+    });
+
+    photoresistor.on("data", function () {
+        io.sockets.emit('luminosidade', this.value);
+    });
+};
 
 const sensorTemperatura = () => {
     thermometer = new five.Thermometer({
@@ -111,8 +127,8 @@ const interruptorLuz = (luz, lugar) => {
                 else if (lugar == 'quarto') {
                     ledQuarto.on();
                 }
-                else if (lugar == 'cozinha') {
-                    ledCozinha.on();
+                else if (lugar == 'externa') {
+                    ledExterno.on();
                 }
                 else {
                     console.log('Comodo não encontrado');
@@ -125,8 +141,8 @@ const interruptorLuz = (luz, lugar) => {
                 else if (lugar == 'quarto') {
                     ledQuarto.off();
                 }
-                else if (lugar == 'cozinha') {
-                    ledCozinha.off();
+                else if (lugar == 'externa') {
+                    ledExterno.off();
                 }
                 else {
                     console.log('Comodo não encontrado');
